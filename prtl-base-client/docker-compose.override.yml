@@ -1,0 +1,7 @@
+services:
+  client:
+    networks:
+      - prtl-base-network
+networks:
+  prtl-base-network:
+    external: true
