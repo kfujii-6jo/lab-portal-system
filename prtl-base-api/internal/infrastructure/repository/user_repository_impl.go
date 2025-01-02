@@ -23,3 +23,15 @@ func (r *UserRepositoryImpl) FindByID(id int) (*model.User, error) {
 	}
     return nil, errors.New("user not found")
 }
+
+func (r *UserRepositoryImpl) FindByUsername(username string) (*model.User, error) {
+	var users = []model.User{
+		{ID: 1, Username: "username", Password: "password"},
+	}
+	for _, user := range users {
+		if user.Username == username {
+			return &user, nil
+		}
+	}
+    return nil, errors.New("user not found")
+}

@@ -18,3 +18,7 @@ func NewUserService(userRepository repository.UserRepository) *UserService {
 func (s *UserService) FindUserById(id int) (*model.User, error) {
     return s.userRepository.FindByID(id)
 }
+
+func (s *UserService) FindUserByUsername(username string) (*model.User, error) {
+    return s.userRepository.FindByUsername(username)
+}
