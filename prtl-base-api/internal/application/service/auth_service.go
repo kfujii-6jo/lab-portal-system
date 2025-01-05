@@ -1,19 +1,20 @@
 package service
 
 import (
+	"time"
 	"errors"
+	"github.com/go-chi/jwtauth/v5"
 	"prtl-base-api/internal/domain/repository"
-	"prtl-base-api/internal/infrastructure/jwt"
 )
 
 type AuthService struct {
-	jwtProvider jwt.JWTProvider
+	tokenAuth   jwtauth.JWTAuth
 	userRepo    repository.UserRepository
 }
 
-func NewAuthService(jwtProvider jwt.JWTProvider, userRepo repository.UserRepository) *AuthService {
+func NewAuthService(tokenAuth *jwtauth.JWTAuth, userRepo repository.UserRepository) *AuthService {
 	return &AuthService{
-		jwtProvider: jwtProvider,
+		tokenAuth:   *tokenAuth,
 		userRepo:    userRepo,
 	}
 }
@@ -23,9 +24,15 @@ func (s *AuthService) AuthenticateUser(username string, password string) (string
 	if err != nil || user.Password != password {
 		return "", errors.New("invalid credentials")
 	}
-	token, err := s.jwtProvider.GenerateToken(user.ID)
+
+	_, tokenString, err := s.tokenAuth.Encode(map[string]interface{}{
+		"sub": string(user.ID),
+		"iss": "prtl-base-api",
+		"exp": time.Now().Add(time.Hour * 72).Unix(),
+	})
+
 	if err != nil {
 		return "", err
 	}
-	return token, nil
+	return tokenString, nil
 }

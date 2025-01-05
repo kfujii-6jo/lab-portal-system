@@ -47,7 +47,7 @@ export const UserLogin: React.FC = () => {
         throw new Error("ログインに失敗しました");
       }
       const data = await res.json();
-      localStorage.setItem("token", data.data.token);
+      localStorage.setItem("token", data.token);
       navigate({
         to: "/home",
       });
